@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.math.BigDecimal;   
 
 public class Calculator extends JFrame {
 
@@ -33,6 +34,7 @@ public class Calculator extends JFrame {
 				try {
 					Calculator frame = new Calculator();
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -102,28 +104,31 @@ public class Calculator extends JFrame {
 		calculate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (cashMove.getText().isEmpty()==false ) {
-				float a1=Float.parseFloat(cashMove.getText());
+				BigDecimal a1 = new BigDecimal(cashMove.getText());
+				//float a1=Float.parseFloat(cashMove.getText());
 				int f1;
-				if (a1<0) {
+				double a11 = a1.doubleValue();
+				if (a11<0) {
 					f1=1;
 				} else {
 					f1=0;
 				}
-				float ab1=java.lang.Math.abs(a1);
-				float a2=Float.parseFloat(quantity.getText());
-				float a3=Float.parseFloat(currentPrice.getText());
-				float r1;
+				BigDecimal ab1=a1.abs();
+				BigDecimal a2= new BigDecimal (quantity.getText());
+				BigDecimal a3= new BigDecimal (currentPrice.getText());
+				BigDecimal r1;
 								
 				if (f1==0) {
-					r1=(ab1/a2)+a3;
+					
+					r1 = (ab1.divide(a2)).add(a3);					
 				} else {
-					r1=(ab1/a2)-a3;
+					r1 = (ab1.divide(a2)).subtract(a3);
 				}
-				r1=java.lang.Math.abs(r1);
-				formattedString = String.format("%.06f", r1);
+				r1=r1.abs();
+				formattedString = r1.toString();
 				newPrice.setText(formattedString);
 				
-				cashMove.setEditable(false);
+				//cashMove.setEditable(false);
 				quantity.setEditable(false);
 				currentPrice.setEditable(false);
 				
