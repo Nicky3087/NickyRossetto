@@ -1,0 +1,161 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class Calculator extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField cashMove;
+	private JTextField quantity;
+	private JTextField currentPrice;
+	private JButton reset;
+	private JButton calculate;
+	private JLabel newPrice;
+	private JButton copy;
+	String formattedString;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Calculator frame = new Calculator();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Calculator() {
+		setTitle("Nicky's SBL Reprice Calculator");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		cashMove = new JTextField();
+		cashMove.setBounds(140, 42, 86, 20);
+		contentPane.add(cashMove);
+		cashMove.setColumns(10);
+		
+		quantity = new JTextField();
+		quantity.setColumns(10);
+		quantity.setBounds(140, 73, 86, 20);
+		contentPane.add(quantity);
+		
+		currentPrice = new JTextField();
+		currentPrice.setColumns(10);
+		currentPrice.setBounds(140, 104, 86, 20);
+		contentPane.add(currentPrice);
+		
+		JLabel lblNewLabel = new JLabel("Proposed cash move");
+		lblNewLabel.setBounds(4, 45, 126, 14);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblCurrentShsCuantity = new JLabel("Current shs cuantity");
+		lblCurrentShsCuantity.setBounds(4, 76, 126, 14);
+		contentPane.add(lblCurrentShsCuantity);
+		
+		JLabel lblCurrentPrice = new JLabel("Current price");
+		lblCurrentPrice.setBounds(4, 107, 126, 14);
+		contentPane.add(lblCurrentPrice);
+		
+		reset = new JButton("Reset");
+		reset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cashMove.setText("");
+				quantity.setText("");
+				currentPrice.setText("");
+				newPrice.setText("");
+				cashMove.setEditable(true);
+				quantity.setEditable(true);
+				currentPrice.setEditable(true);
+			}
+		});
+		reset.setBounds(10, 227, 89, 23);
+		contentPane.add(reset);
+		
+		newPrice = new JLabel("");
+		newPrice.setBounds(140, 172, 284, 14);
+		contentPane.add(newPrice);
+		
+		calculate = new JButton("Calculate");
+		calculate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (cashMove.getText().isEmpty()==false ) {
+				float a1=Float.parseFloat(cashMove.getText());
+				int f1;
+				if (a1<0) {
+					f1=1;
+				} else {
+					f1=0;
+				}
+				float ab1=java.lang.Math.abs(a1);
+				float a2=Float.parseFloat(quantity.getText());
+				float a3=Float.parseFloat(currentPrice.getText());
+				float r1;
+								
+				if (f1==0) {
+					r1=(ab1/a2)+a3;
+				} else {
+					r1=(ab1/a2)-a3;
+				}
+				r1=java.lang.Math.abs(r1);
+				formattedString = String.format("%.06f", r1);
+				newPrice.setText(formattedString);
+				
+				cashMove.setEditable(false);
+				quantity.setEditable(false);
+				currentPrice.setEditable(false);
+				
+				//newPrice.setText(String.valueOf(r1));
+			} else {
+				newPrice.setText("Insert proposed cash move");
+			}
+			}
+		});
+		calculate.setBounds(335, 227, 89, 23);
+		contentPane.add(calculate);
+		
+		copy = new JButton("Copy price to clipboard");
+		copy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StringSelection stringSelection = new StringSelection(formattedString);
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(stringSelection, null);
+			}
+		});
+		copy.setBounds(137, 227, 170, 23);
+		contentPane.add(copy);
+		
+		JLabel lblNewLabel_1 = new JLabel("New Price");
+		lblNewLabel_1.setBounds(4, 172, 95, 14);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblInsertIf = new JLabel("Insert \"-\" if negative move is needed");
+		lblInsertIf.setBounds(236, 45, 188, 14);
+		contentPane.add(lblInsertIf);
+				
+		
+		
+	}
+}
