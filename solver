@@ -1,0 +1,67 @@
+Sub FindNumbers()
+
+Dim targetSum As Double
+Dim numCells As Integer
+Dim numArray() As Double
+Dim i As Integer
+Dim j As Integer
+Dim k As Integer
+Dim foundSolution As Boolean
+
+' Prompt the user to enter the target sum
+targetSum = InputBox("Enter the target sum:")
+
+' Determine the number of cells to use
+numCells = Range("A1").End(xlDown).Row
+
+' Initialize the number array
+ReDim numArray(numCells - 1)
+
+' Copy the numbers to the array
+For i = 0 To numCells - 1
+    numArray(i) = Range("A1").Offset(i, 0).Value
+Next i
+
+' Loop through all possible combinations of numbers
+For i = 1 To 2 ^ numCells - 1
+    Dim tempSum As Double
+    Dim tempArray() As Double
+    
+    ' Convert the current iteration number to binary and pad with zeroes
+    Dim binaryString As String
+    binaryString = Application.WorksheetFunction.Dec2Bin(i - 1, numCells)
+    binaryString = String(numCells - Len(binaryString), "0") & binaryString
+    
+    ' Create a temporary array of numbers based on the current combination
+    ReDim tempArray(numCells - 1)
+    For j = 1 To numCells
+        If Mid(binaryString, j, 1) = "1" Then
+            tempArray(j - 1) = numArray(j - 1)
+        Else
+            tempArray(j - 1) = 0
+        End If
+    Next j
+    
+    ' Calculate the sum of the temporary array
+    tempSum = Application.WorksheetFunction.Sum(tempArray)
+    
+    ' Check if the sum matches the target sum
+    If tempSum = targetSum Then
+        foundSolution = True
+        
+        ' Output the solution to the worksheet
+        For k = 1 To numCells
+            Range("B1").Offset(k - 1, 0).Value = tempArray(k - 1)
+        Next k
+        
+        ' Exit the loop
+        Exit For
+    End If
+Next i
+
+' Output a message if no solution was found
+If Not foundSolution Then
+    MsgBox "No solution found."
+End If
+
+End Sub
